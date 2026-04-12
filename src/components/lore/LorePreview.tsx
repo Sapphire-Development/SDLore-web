@@ -2,9 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { processMinecraftColorCodes } from "@/utils/minecraft-colors";
 import { useLanguage } from "@/context/LanguageContext";
 
+import { type LoreLine } from "@/hooks/useLore";
+
 interface LorePreviewProps {
   name: string;
-  lore: string[];
+  lore: LoreLine[];
 }
 
 export function LorePreview({ name, lore }: LorePreviewProps) {
@@ -29,13 +31,12 @@ export function LorePreview({ name, lore }: LorePreviewProps) {
               }}
             />
             
-            {/* Lore Lines */}
-            {lore.map((line, index) => (
+            {lore.map((line) => (
               <div 
-                key={index}
+                key={line.id}
                 className="whitespace-pre-wrap"
                 dangerouslySetInnerHTML={{ 
-                  __html: line ? processMinecraftColorCodes(line) : "&nbsp;" 
+                  __html: line.value ? processMinecraftColorCodes(line.value) : "&nbsp;" 
                 }}
               />
             ))}

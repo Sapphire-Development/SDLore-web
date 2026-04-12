@@ -18,11 +18,16 @@ function LoreEditorContent() {
     addLoreLine,
     removeLoreLine,
     updateLoreLine,
+    reorderLoreLine,
     enchants,
     addEnchant,
     removeEnchant,
     updateEnchant,
     clearEditor,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
   } = useLore();
 
   const { t } = useLanguage();
@@ -46,7 +51,7 @@ function LoreEditorContent() {
     try {
       const code = await generateLoreCode({
         name,
-        lore,
+        lore: lore.map(l => l.value),
         enchants: enchants.length > 0 ? enchants : undefined,
       });
       setGeneratedCode(code);
@@ -73,6 +78,7 @@ function LoreEditorContent() {
             addLoreLine={addLoreLine}
             removeLoreLine={removeLoreLine}
             updateLoreLine={updateLoreLine}
+            reorderLoreLine={reorderLoreLine}
             enchants={enchants}
             addEnchant={addEnchant}
             removeEnchant={removeEnchant}
@@ -80,6 +86,10 @@ function LoreEditorContent() {
             clearEditor={handleClear}
             onGenerate={handleGenerate}
             isGenerating={isGenerating}
+            undo={undo}
+            redo={redo}
+            canUndo={canUndo}
+            canRedo={canRedo}
           />
           {generatedCode && (
             <LoreResult 

@@ -1,93 +1,206 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export interface Enchant {
   id: string;
   level: number;
 }
 
+export interface LoreLine {
+  id: string;
+  value: string;
+}
+
+export interface EditorState {
+  name: string;
+  lore: LoreLine[];
+  enchants: Enchant[];
+}
+
 export function useLore() {
-  const [name, setName] = useState("<gray>Item Name");
-  const [lore, setLore] = useState<string[]>(["<gray>Item Lore"]);
-  const [enchants, setEnchants] = useState<Enchant[]>([]);
+  const [state, setState] = useState<EditorState>({
+    name: "<gray>Item Name",
+    lore: [{ id: crypto.randomUUID(), value: "<gray>Item Lore" }],
+    enchants: [],
+  });
+
+  const [past, setPast] = useState<EditorState[]>([]);
+  const [future, setFuture] = useState<EditorState[]>([]);
+  const isUndoRedoAction = useRef(false);
+  const isInitialLoad = useRef(true);
 
   // Load from localStorage on mount
   useEffect(() => {
     const savedName = localStorage.getItem("sdlore:name");
     const savedLore = localStorage.getItem("sdlore:lore");
     const savedEnchants = localStorage.getItem("sdlore:enchants");
-    if (savedName) setName(savedName);
+
+    let initialLore: LoreLine[] = [{ id: crypto.randomUUID(), value: "<gray>Item Lore" }];
+    let initialEnchants: Enchant[] = [];
+
     if (savedLore) {
-      try {
-        setLore(JSON.parse(savedLore));
-      } catch (e) {
-        // ignore JSON parse errors
-      }
+      try { 
+        const parsed = JSON.parse(savedLore);
+        if (parsed.length > 0 && typeof parsed[0] === 'string') {
+          initialLore = parsed.map((v: string) => ({ id: crypto.randomUUID(), value: v }));
+        } else if (parsed.length > 0) {
+          initialLore = parsed;
+        }
+      } catch (e) {}
     }
     if (savedEnchants) {
-      try {
-        setEnchants(JSON.parse(savedEnchants));
-      } catch (e) {
-        // ignore JSON parse errors
-      }
+      try { initialEnchants = JSON.parse(savedEnchants); } catch (e) {}
     }
+
+    const initialState = {
+      name: savedName || "<gray>Item Name",
+      lore: initialLore,
+      enchants: initialEnchants,
+    };
+
+    setState(initialState);
+    setPast([initialState]);
+    isInitialLoad.current = false;
   }, []);
 
   // Save to localStorage when changed
   useEffect(() => {
-    localStorage.setItem("sdlore:name", name);
-    localStorage.setItem("sdlore:lore", JSON.stringify(lore));
-    localStorage.setItem("sdlore:enchants", JSON.stringify(enchants));
-  }, [name, lore, enchants]);
+    if (isInitialLoad.current) return;
+    localStorage.setItem("sdlore:name", state.name);
+    localStorage.setItem("sdlore:lore", JSON.stringify(state.lore));
+    localStorage.setItem("sdlore:enchants", JSON.stringify(state.enchants));
+  }, [state]);
 
-  const addLoreLine = () => setLore([...lore, ""]);
+  // Handle history debounce
+  useEffect(() => {
+    if (isInitialLoad.current) return;
 
-  const removeLoreLine = (index: number) => {
-    setLore(lore.filter((_, i) => i !== index));
+    if (isUndoRedoAction.current) {
+      isUndoRedoAction.current = false;
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setPast((prevPast) => {
+        const lastPast = prevPast[prevPast.length - 1];
+        if (lastPast && JSON.stringify(lastPast) === JSON.stringify(state)) {
+          return prevPast;
+        }
+        const newPast = [...prevPast, state];
+        if (newPast.length > 50) newPast.shift();
+        return newPast;
+      });
+      setFuture([]); // Clear future on new action
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [state]);
+
+  const undo = () => {
+    setPast((currentPast) => {
+      let pastToUse = currentPast;
+      const lastPast = currentPast[currentPast.length - 1];
+      
+      // Save current state if it hasn't been debounced yet
+      if (lastPast && JSON.stringify(lastPast) !== JSON.stringify(state)) {
+        pastToUse = [...currentPast, state];
+      }
+
+      if (pastToUse.length <= 1) return currentPast;
+
+      const previousState = pastToUse[pastToUse.length - 2];
+      const stateToUndo = pastToUse[pastToUse.length - 1];
+      
+      setFuture((f) => [stateToUndo, ...f]);
+      isUndoRedoAction.current = true;
+      setState(previousState);
+      
+      return pastToUse.slice(0, pastToUse.length - 1);
+    });
   };
 
-  const updateLoreLine = (index: number, value: string) => {
-    const newLore = [...lore];
-    newLore[index] = value;
-    setLore(newLore);
+  const redo = () => {
+    setFuture((currentFuture) => {
+      if (currentFuture.length === 0) return currentFuture;
+      
+      const nextState = currentFuture[0];
+      
+      setPast((p) => [...p, nextState]);
+      isUndoRedoAction.current = true;
+      setState(nextState);
+      
+      return currentFuture.slice(1);
+    });
   };
 
-  const setLoreBulk = (text: string) => {
-    setLore(text.split("\n"));
-  };
+  const setName = (name: string) => setState(s => ({ ...s, name }));
+  
+  const setLoreBulk = (text: string) => setState(s => ({ 
+    ...s, 
+    lore: text.split("\n").map(value => ({ id: crypto.randomUUID(), value })) 
+  }));
+  
+  const addLoreLine = () => setState(s => ({ 
+    ...s, 
+    lore: [...s.lore, { id: crypto.randomUUID(), value: "" }] 
+  }));
+  
+  const removeLoreLine = (index: number) => setState(s => ({
+    ...s,
+    lore: s.lore.filter((_, i) => i !== index)
+  }));
+  
+  const updateLoreLine = (index: number, value: string) => setState(s => {
+    const newLore = [...s.lore];
+    newLore[index] = { ...newLore[index], value };
+    return { ...s, lore: newLore };
+  });
 
-  const addEnchant = () => setEnchants([...enchants, { id: "", level: 1 }]);
+  const reorderLoreLine = (oldIndex: number, newIndex: number) => setState(s => {
+    const newLore = [...s.lore];
+    const [removed] = newLore.splice(oldIndex, 1);
+    newLore.splice(newIndex, 0, removed);
+    return { ...s, lore: newLore };
+  });
 
-  const removeEnchant = (index: number) => {
-    setEnchants(enchants.filter((_, i) => i !== index));
-  };
+  const addEnchant = () => setState(s => ({
+    ...s,
+    enchants: [...s.enchants, { id: "", level: 1 }]
+  }));
 
-  const updateEnchant = (index: number, id: string, level: number) => {
-    const newEnchants = [...enchants];
+  const removeEnchant = (index: number) => setState(s => ({
+    ...s,
+    enchants: s.enchants.filter((_, i) => i !== index)
+  }));
+
+  const updateEnchant = (index: number, id: string, level: number) => setState(s => {
+    const newEnchants = [...s.enchants];
     newEnchants[index] = { id, level };
-    setEnchants(newEnchants);
-  };
+    return { ...s, enchants: newEnchants };
+  });
 
-  const clearEditor = () => {
-    setName("");
-    setLore([""]);
-    setEnchants([]);
-  };
+  const clearEditor = () => setState({
+    name: "",
+    lore: [{ id: crypto.randomUUID(), value: "" }],
+    enchants: [],
+  });
 
   return {
-    name,
+    name: state.name,
     setName,
-    lore,
-    setLore,
+    lore: state.lore,
     setLoreBulk,
     addLoreLine,
     removeLoreLine,
     updateLoreLine,
-    enchants,
-    setEnchants,
+    reorderLoreLine,
+    enchants: state.enchants,
     addEnchant,
     removeEnchant,
     updateEnchant,
     clearEditor,
+    undo,
+    redo,
+    canUndo: past.length > 1 || (past.length > 0 && JSON.stringify(past[past.length - 1]) !== JSON.stringify(state)),
+    canRedo: future.length > 0,
   };
 }
-
