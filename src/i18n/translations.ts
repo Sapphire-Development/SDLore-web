@@ -1,0 +1,125 @@
+export const translations = {
+  es: {
+    hero: {
+      title: "SDLore Editor",
+      subtitle: "Crea lores espectaculares para tus items de Minecraft",
+    },
+    editor: {
+      itemName: "Nombre del Item",
+      itemNamePlaceholder: "<red>Espada de Destino",
+      loreLines: "Líneas de Lore",
+      loreLinePlaceholder: "<gray>Daño: <red>+10",
+      addBtn: "Añadir Línea",
+      generateBtn: "Generar Código",
+      generating: "Generando...",
+      clearEditor: "Limpiar Editor",
+      tabs: {
+        list: "Lista",
+        bulk: "Bloque",
+      },
+      bulkNote: "* Cada línea del área de texto se convertirá en una línea de lore.",
+      bulkPlaceholder: "<gray>Línea 1\n<gray>Línea 2",
+      enchants: "Encantamientos",
+      enchantIdPlaceholder: "sharpness",
+      enchantLevelPlaceholder: "Nivel",
+      addEnchantBtn: "Añadir Encantamiento",
+      manageEnchantsBtn: "Gestionar Encantamientos",
+      enchantsDialogTitle: "Encantamientos del Item",
+      enchantsDialogDesc: "Configura los encantamientos que tendrá este item.",
+    },
+    preview: {
+      title: "Vista Previa de Lore",
+      defaultName: "<gray>Nombre del Item",
+      defaultLore: "<gray>Lore del Item",
+    },
+    result: {
+      title: "¡Generado con Éxito!",
+      description: "Tu código de lore ya está listo para usarse.",
+      codeLabel: "Código del Lore",
+      cmdLabel: "Consejo",
+      cmdTip: "Usa el comando {cmd} en el juego para aplicarlo rápidamente.",
+      copy: "Copiar",
+      copied: "Copiado",
+    },
+    toasts: {
+      cleared: "Editor limpiado",
+      success: "¡Código generado con éxito!",
+      error: "Error al generar el código. Por favor intenta nuevamente.",
+      requiredName: "El nombre del item es requerido",
+      copied: "¡Copiado al portapapeles!",
+      cmdCopied: "¡Comando copiado!",
+    },
+    toolbar: {
+      colors: "Colores",
+      insertHex: "Insertar Hex",
+      basicColors: "O elige uno básico:",
+      bold: "Negrita",
+      italic: "Cursiva",
+      underline: "Subrayado",
+      strikethrough: "Tachado",
+    }
+  },
+  en: {
+    hero: {
+      title: "SDLore Editor",
+      subtitle: "Create spectacular lores for your Minecraft items",
+    },
+    editor: {
+      itemName: "Item Name",
+      itemNamePlaceholder: "<red>Sword of Destiny",
+      loreLines: "Lore Lines",
+      loreLinePlaceholder: "<gray>Damage: <red>+10",
+      addBtn: "Add Line",
+      generateBtn: "Generate Code",
+      generating: "Generating...",
+      clearEditor: "Clear Editor",
+      tabs: {
+        list: "List",
+        bulk: "Bulk",
+      },
+      bulkNote: "* Each line in the text area will become a lore line.",
+      bulkPlaceholder: "<gray>Line 1\n<gray>Line 2",
+      enchants: "Enchantments",
+      enchantIdPlaceholder: "sharpness",
+      enchantLevelPlaceholder: "Level",
+      addEnchantBtn: "Add Enchantment",
+      manageEnchantsBtn: "Manage Enchantments",
+      enchantsDialogTitle: "Item Enchantments",
+      enchantsDialogDesc: "Configure the enchantments for this item.",
+    },
+    preview: {
+      title: "Lore Preview",
+      defaultName: "<gray>Item Name",
+      defaultLore: "<gray>Item Lore",
+    },
+    result: {
+      title: "Generated Successfully!",
+      description: "Your lore code is ready to use.",
+      codeLabel: "Lore Code",
+      cmdLabel: "Tip",
+      cmdTip: "Use the command {cmd} in-game to apply it quickly.",
+      copy: "Copy",
+      copied: "Copied",
+    },
+    toasts: {
+      cleared: "Editor cleared",
+      success: "Code generated successfully!",
+      error: "Error generating code. Please try again.",
+      requiredName: "Item name is required",
+      copied: "Copied to clipboard!",
+      cmdCopied: "Command copied!",
+    },
+    toolbar: {
+      colors: "Colors",
+      insertHex: "Insert Hex",
+      basicColors: "Or choose a basic one:",
+      bold: "Bold",
+      italic: "Italic",
+      underline: "Underline",
+      strikethrough: "Strikethrough",
+    }
+  }
+};
+
+export type Language = "es" | "en";
+export type TranslationKeys = typeof translations.es;
