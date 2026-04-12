@@ -125,13 +125,15 @@ export function LoreForm({
   return (
     <div className="flex flex-col h-full max-h-full gap-4">
       <div className="flex items-center justify-between shrink-0">
-        <div className="flex items-center p-1 bg-muted/20 border rounded-md shrink-0">
-          <EnchantmentsDialog 
-            enchants={enchants}
-            addEnchant={addEnchant}
-            removeEnchant={removeEnchant}
-            updateEnchant={updateEnchant}
-          />
+        <div className="flex items-center gap-2">
+          <div className="flex items-center p-1 bg-muted/20 border rounded-md shrink-0">
+            <EnchantmentsDialog 
+              enchants={enchants}
+              addEnchant={addEnchant}
+              removeEnchant={removeEnchant}
+              updateEnchant={updateEnchant}
+            />
+          </div>
         </div>
         
         <div className="flex items-center gap-2">

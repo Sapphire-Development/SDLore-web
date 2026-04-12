@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Trash2, Sparkles } from "lucide-react";
+import { Plus, Trash2, Sparkles, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { type Enchant } from "@/hooks/useLore";
 
@@ -43,8 +43,18 @@ export function EnchantmentsDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t.editor.enchantsDialogTitle}</DialogTitle>
-          <DialogDescription>
-            {t.editor.enchantsDialogDesc}
+          <DialogDescription className="space-y-1.5 flex flex-col pt-1">
+            <span>{t.editor.enchantsDialogDesc}</span>
+            <a 
+              href="https://www.digminecraft.com/lists/enchantment_list_pc.php" 
+              target="_blank" 
+              rel="noreferrer"
+              className="text-primary hover:underline hover:text-primary/80 inline-flex items-center gap-1 w-fit text-xs font-medium transition-colors"
+            >
+              {/* @ts-ignore */}
+              {t.editor.enchantsListLink}
+              <ExternalLink className="h-3 w-3" />
+            </a>
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">

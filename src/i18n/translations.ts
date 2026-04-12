@@ -18,6 +18,7 @@ export const translations = {
         bulk: "Bloque",
       },
       bulkNote: "* Cada línea del área de texto se convertirá en una línea de lore.",
+      minimessageNote: "Solo se permite el uso del formato MiniMessage.",
       bulkPlaceholder: "<gray>Línea 1\n<gray>Línea 2",
       enchants: "Encantamientos",
       enchantIdPlaceholder: "sharpness",
@@ -30,6 +31,7 @@ export const translations = {
       redo: "Rehacer",
       enchantsDialogTitle: "Encantamientos del Item",
       enchantsDialogDesc: "Configura los encantamientos que tendrá este item.",
+      enchantsListLink: "Ver lista de encantamientos",
     },
     preview: {
       title: "Vista Previa de Lore",
@@ -82,6 +84,7 @@ export const translations = {
         bulk: "Bulk",
       },
       bulkNote: "* Each line in the text area will become a lore line.",
+      minimessageNote: "Only MiniMessage format is allowed.",
       bulkPlaceholder: "<gray>Line 1\n<gray>Line 2",
       enchants: "Enchantments",
       enchantIdPlaceholder: "sharpness",
@@ -94,6 +97,7 @@ export const translations = {
       redo: "Redo",
       enchantsDialogTitle: "Item Enchantments",
       enchantsDialogDesc: "Configure the enchantments for this item.",
+      enchantsListLink: "View enchantment list",
     },
     preview: {
       title: "Lore Preview",

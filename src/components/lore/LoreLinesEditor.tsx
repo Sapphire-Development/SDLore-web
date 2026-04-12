@@ -151,9 +151,16 @@ export function LoreLinesEditor({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium">{t.editor.loreLines}</Label>
-        <Tabs value={editorMode} onValueChange={(v) => setEditorMode(v as "list" | "bulk")}>
+      <div className="flex sm:items-center justify-between gap-4">
+        <div className="space-y-0.5">
+          <Label className="text-sm font-medium">{t.editor.loreLines}</Label>
+          <p className="text-[10px] text-muted-foreground/80 leading-tight">
+            {/* @ts-ignore */}
+            {t.editor.minimessageNote}
+          </p>
+        </div>
+        
+        <Tabs value={editorMode} onValueChange={(v) => setEditorMode(v as "list" | "bulk")} className="shrink-0">
           <TabsList className="grid w-[180px] grid-cols-2 h-8">
             <TabsTrigger value="list" className="text-[10px] uppercase tracking-wider flex items-center gap-1.5">
               <List className="w-3 h-3" />
