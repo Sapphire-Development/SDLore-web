@@ -88,7 +88,7 @@ function SortableItem({
         onClick={trackInput}
         onKeyUp={trackInput}
         placeholder={t.editor.loreLinePlaceholder}
-        className="font-mono text-sm shadow-none focus-visible:shadow-sm"
+        className="text-sm shadow-none focus-visible:shadow-sm"
       />
       <Button
         variant="destructive"
@@ -218,7 +218,7 @@ export function LoreLinesEditor({
             onClick={trackInput}
             onKeyUp={trackInput}
             placeholder={t.editor.bulkPlaceholder}
-            className="font-mono text-sm min-h-[200px] resize-none leading-relaxed"
+            className="text-sm min-h-[200px] resize-none leading-relaxed"
           />
           <p className="text-[10px] text-muted-foreground italic">
             {t.editor.bulkNote}
