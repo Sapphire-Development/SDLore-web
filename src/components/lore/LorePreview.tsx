@@ -1,6 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { processMinecraftColorCodes } from "@/utils/minecraft-colors";
 import { useLanguage } from "@/context/LanguageContext";
+import DOMPurify from "isomorphic-dompurify";
+
+const sanitize = (html: string) =>
+  DOMPurify.sanitize(html, { ALLOWED_TAGS: ["span"], ALLOWED_ATTR: ["style"] });
 
 import { type LoreLine } from "@/hooks/useLore";
 
@@ -26,8 +30,8 @@ export function LorePreview({ name, lore }: LorePreviewProps) {
             
             <div 
               className="mb-2 whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ 
-                __html: name ? processMinecraftColorCodes(name) : processMinecraftColorCodes(t.preview.defaultName) 
+              dangerouslySetInnerHTML={{
+                __html: sanitize(name ? processMinecraftColorCodes(name) : processMinecraftColorCodes(t.preview.defaultName))
               }}
             />
             
@@ -35,8 +39,8 @@ export function LorePreview({ name, lore }: LorePreviewProps) {
               <div 
                 key={line.id}
                 className="whitespace-pre-wrap"
-                dangerouslySetInnerHTML={{ 
-                  __html: line.value ? processMinecraftColorCodes(line.value) : "&nbsp;" 
+                dangerouslySetInnerHTML={{
+                  __html: line.value ? sanitize(processMinecraftColorCodes(line.value)) : "&nbsp;"
                 }}
               />
             ))}
