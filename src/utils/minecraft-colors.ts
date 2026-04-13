@@ -471,6 +471,14 @@ class MiniMessageProcessor {
 		return this.renderCharactersWithStyle(text, style);
 	}
 
+	private escapeHtml(text: string): string {
+		return text
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;");
+	}
+
 	private renderCharactersWithStyle(text: string, style: StyleState): string {
 		const styles: string[] = [];
 
@@ -494,11 +502,13 @@ class MiniMessageProcessor {
 			styles.push(style.shadow);
 		}
 
+		const escaped = this.escapeHtml(text);
+
 		if (styles.length === 0) {
-			return text;
+			return escaped;
 		}
 
-		return `<span style="${styles.join(";")}">${text}</span>`;
+		return `<span style="${styles.join(";")}">${escaped}</span>`;
 	}
 
 	private processOpenTag(token: Token): string {

@@ -38,17 +38,24 @@ export function useLore() {
     let initialEnchants: Enchant[] = [];
 
     if (savedLore) {
-      try { 
+      try {
         const parsed = JSON.parse(savedLore);
-        if (parsed.length > 0 && typeof parsed[0] === 'string') {
-          initialLore = parsed.map((v: string) => ({ id: crypto.randomUUID(), value: v }));
-        } else if (parsed.length > 0) {
-          initialLore = parsed;
+        if (Array.isArray(parsed)) {
+          if (parsed.every((v): v is string => typeof v === "string")) {
+            initialLore = parsed.map((v) => ({ id: crypto.randomUUID(), value: v }));
+          } else if (parsed.every((v): v is LoreLine => typeof v?.id === "string" && typeof v?.value === "string")) {
+            initialLore = parsed;
+          }
         }
-      } catch (e) {}
+      } catch { /* corrupted data, use defaults */ }
     }
     if (savedEnchants) {
-      try { initialEnchants = JSON.parse(savedEnchants); } catch (e) {}
+      try {
+        const parsed = JSON.parse(savedEnchants);
+        if (Array.isArray(parsed) && parsed.every((e): e is Enchant => typeof e?.id === "string" && typeof e?.level === "number")) {
+          initialEnchants = parsed;
+        }
+      } catch { /* corrupted data, use defaults */ }
     }
 
     const initialState = {
