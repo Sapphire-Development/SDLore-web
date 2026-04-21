@@ -18,22 +18,20 @@ import {
   Underline,
   Strikethrough,
 } from "lucide-react";
-import { HexColorPicker } from "react-colorful";
 import { useLanguage } from "@/context/LanguageContext";
+import { BasicColorPicker } from "./BasicColorPicker";
+import { GradientBuilder } from "./GradientBuilder";
 
 export function FormatToolbar({ onInsert }: { onInsert: (tag: string) => void }) {
   const { t } = useLanguage();
-  const [color, setColor] = useState("#FF5555");
   const [open, setOpen] = useState(false);
+  const [color, setColor] = useState("#FF5555");
+  const [gradColors, setGradColors] = useState(["#FF512F", "#DD2476"]);
+  const [activeGradIndex, setActiveGradIndex] = useState(0);
 
   const handleInsert = (e: React.MouseEvent, tag: string) => {
-    e.preventDefault(); // Prevent losing focus on the input!
+    e.preventDefault();
     onInsert(tag);
-  };
-
-  const handleColorInsert = () => {
-    onInsert(`${color}`);
-    setOpen(false);
   };
 
   const colors = [
@@ -66,46 +64,25 @@ export function FormatToolbar({ onInsert }: { onInsert: (tag: string) => void })
                     <Palette className="h-4 w-4" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent align="start" className="w-[220px] p-3 space-y-3">
-                  <div className="flex flex-col gap-2">
-                    <HexColorPicker color={color} onChange={setColor} style={{ width: "100%", height: "140px" }} />
-                    <div className="flex items-center justify-between gap-2 mt-1">
-                      <div 
-                        className="w-6 h-6 rounded border shadow-sm shrink-0" 
-                        style={{ backgroundColor: color }} 
-                      />
-                      <span className="text-xs font-mono flex-1 text-center border rounded py-1 bg-muted/50">{color}</span>
-                    </div>
-                    <Button size="sm" className="w-full h-8" onClick={handleColorInsert}>
-                      {t.toolbar.insertHex}
-                    </Button>
-                  </div>
-                  
-                  <div className="border-t pt-3 mt-1">
-                    <span className="text-xs font-semibold text-muted-foreground mb-2 block">{t.toolbar.basicColors}</span>
-                    <div className="grid grid-cols-7 gap-[3.5px]">
-                      {colors.map((c) => (
-                        <button
-                          key={c.tag}
-                          title={c.name}
-                          onClick={() => {
-                            onInsert(c.tag);
-                            setOpen(false);
-                          }}
-                          className="w-full aspect-square rounded-[3px] border border-border/50 shadow-sm hover:scale-110 transition-transform"
-                          style={{ backgroundColor: c.hex }}
-                        />
-                      ))}
-                      <button
-                        title="Rainbow"
-                        onClick={() => {
-                          onInsert("rainbow");
-                          setOpen(false);
-                        }}
-                        className="w-full flex items-center justify-center aspect-square rounded-[3px] border shadow-sm bg-gradient-to-br from-red-500 via-green-500 to-blue-500 hover:scale-110 transition-transform relative overflow-hidden"
-                      />
-                    </div>
-                  </div>
+                <PopoverContent align="start" className="w-fit p-3 flex flex-row gap-4">
+                  <BasicColorPicker 
+                    color={color} 
+                    setColor={setColor} 
+                    onInsert={onInsert} 
+                    setOpen={setOpen} 
+                  />
+
+                  {/* Vertical Divider */}
+                  <div className="w-px bg-border shrink-0" />
+
+                  <GradientBuilder 
+                    gradColors={gradColors}
+                    setGradColors={setGradColors}
+                    activeGradIndex={activeGradIndex}
+                    setActiveGradIndex={setActiveGradIndex}
+                    onInsert={onInsert} 
+                    setOpen={setOpen} 
+                  />
                 </PopoverContent>
               </Popover>
             </div>
@@ -170,7 +147,7 @@ export function FormatToolbar({ onInsert }: { onInsert: (tag: string) => void })
               onMouseDown={(e) => handleInsert(e, "st")}
             >
               <Strikethrough className="h-4 w-4" />
-            </Button>
+            </Button> 
           </TooltipTrigger>
           <TooltipContent><p>{t.toolbar.strikethrough}</p></TooltipContent>
         </Tooltip>

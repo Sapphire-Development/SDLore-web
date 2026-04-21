@@ -58,7 +58,9 @@ export const translations = {
     toolbar: {
       colors: "Colores",
       insertHex: "Insertar Hex",
+      insertGradient: "Insertar Degradado",
       basicColors: "O elige uno básico:",
+      gradients: "Degradados",
       bold: "Negrita",
       italic: "Cursiva",
       underline: "Subrayado",
@@ -124,7 +126,9 @@ export const translations = {
     toolbar: {
       colors: "Colors",
       insertHex: "Insert Hex",
+      insertGradient: "Insert Gradient",
       basicColors: "Or choose a basic one:",
+      gradients: "Gradients",
       bold: "Bold",
       italic: "Italic",
       underline: "Underline",
